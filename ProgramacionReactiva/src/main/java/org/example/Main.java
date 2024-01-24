@@ -7,31 +7,33 @@ import io.reactivex.rxjava3.disposables.Disposable;
 
 public class Main {
     public static void main(String[] args) {
-        Observable<Integer> observable = Observable.range(1, 5);
-        // Suscripción al Observable
-        observable.subscribe(new Observer<Integer>() {
-            @Override
-            public void onSubscribe(Disposable d) {
-                // Metodo utilizado despues de iniciar la suscripción
-                System.out.println("Se inicio la suscripcion");
-            }
-            @Override
-            public void onNext(Integer value) {
-                // Impresion del valor recibido
-                System.out.println("Se recibe: " + value);
-            }
+        Observable<Integer> observable = Observable.range(1, 20); //El observable emite numeros del 1 al 20
+        observable
+                .map(numero -> numero * numero)  // Operación elevar al cuadrado
+                .filter(numeroCuadrado -> numeroCuadrado > 150)  // Filtrado de valores mayores a 15
+                .map(numeroCuadrado -> "Número filtrado: " + numeroCuadrado)  // Transformación a cadena
+                .subscribe(new Observer<String>() {
+                    @Override
+                    public void onSubscribe(Disposable d) {
+                        // Suscripción al Observador
+                        System.out.println("Se inició la suscripción");
+                    }
+                    @Override
+                    public void onNext(String value) {
+                        // Impresion del valor recibido y transformado
+                        System.out.println(value);
+                    }
+                    @Override
+                    public void onError(Throwable e) {
+                        // Caso Error
+                        e.printStackTrace();
+                    }
+                    @Override
+                    public void onComplete() {
+                        // Metodo llamado al completar la emision
+                        System.out.println("La emision fue completada");
+                    }
 
-            @Override
-            public void onError(Throwable e) {
-                // Caso Error
-                e.printStackTrace();
-            }
-
-            @Override
-            public void onComplete() {
-                // Metodo llamado al completar la emision
-                System.out.println("Emision completada!");
-            }
         });
     }
 }
